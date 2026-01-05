@@ -1,17 +1,1106 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Staff Online Safety Training | Herne Hill School</title>
-    <meta name="description" content="Interactive professional development tool for online safety case studies" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Online Safety Training | Herne Hill School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-primary: #2d5a27;
+      --color-primary-light: #4a7c43;
+      --color-primary-dark: #1e3d1a;
+      --color-secondary: #5c4b8a;
+      --color-accent: #d4a53c;
+      --color-success: #3d8b40;
+      --color-warning: #e6a33e;
+      --color-error: #c94444;
+      --color-bg: #f5f0e6;
+      --color-bg-dark: #e8e0d0;
+      --color-card: #fffef8;
+      --color-text: #2c2c2c;
+      --color-text-light: #5a5a5a;
+      --color-border: #c4b8a4;
+      --color-option-a: #4a7c9b;
+      --color-option-b: #7c6b4a;
+      --color-option-c: #6b4a7c;
+      --color-option-d: #4a7c6b;
+      --font-pixel: 'Press Start 2P', cursive;
+      --font-retro: 'VT323', monospace;
+      --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background-color: var(--color-bg); color: var(--color-text); line-height: 1.6; min-height: 100vh; }
+
+    h1, h2, h3 { font-family: var(--font-retro); font-weight: normal; line-height: 1.3; color: var(--color-primary-dark); }
+    h1 { font-family: var(--font-pixel); font-size: 1.25rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.5rem; }
+    p { margin-bottom: 1rem; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; padding: 1.25rem 0; border-bottom: 4px solid var(--color-primary-dark); }
+    .header-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .header h1 { color: white; font-size: 0.9rem; text-shadow: 2px 2px 0px rgba(0,0,0,0.3); margin-bottom: 0.25rem; }
+    .header-subtitle { font-family: var(--font-retro); font-size: 1.2rem; opacity: 0.9; }
+    .progress-box { display: flex; align-items: center; gap: 0.75rem; }
+    .progress-bar { width: 150px; height: 16px; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--color-accent), #e8c46a); transition: width 0.3s; }
+    .progress-text { font-family: var(--font-retro); font-size: 1.1rem; }
+
+    /* Buttons */
+    .btn { font-family: var(--font-retro); font-size: 1.2rem; padding: 0.5rem 1.25rem; border: 3px solid; border-radius: 4px; cursor: pointer; transition: all 0.15s; box-shadow: 3px 3px 0px rgba(0,0,0,0.2); text-transform: uppercase; }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px rgba(0,0,0,0.25); }
+    .btn:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+    .btn-primary { background: var(--color-primary); border-color: var(--color-primary-dark); color: white; }
+    .btn-secondary { background: var(--color-secondary); border-color: #3d3160; color: white; }
+    .btn-accent { background: var(--color-accent); border-color: #b08828; color: var(--color-text); }
+    .btn-outline { background: transparent; border-color: var(--color-primary); color: var(--color-primary); }
+    .btn-outline:hover { background: var(--color-primary); color: white; }
+    .btn-small { font-size: 1rem; padding: 0.4rem 0.75rem; }
+
+    /* Cards */
+    .card { background: var(--color-card); border: 3px solid var(--color-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+
+    /* Main content */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* Home screen */
+    .home { text-align: center; }
+    .home-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .home-title { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .home-desc { font-family: var(--font-retro); font-size: 1.4rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto 2rem; }
+
+    .case-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; text-align: left; }
+    .case-card { padding: 1.25rem; background: var(--color-card); border: 3px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+    .case-card:hover { border-color: var(--color-primary); transform: translateY(-3px); box-shadow: 4px 4px 0px rgba(0,0,0,0.15); }
+    .case-card.completed { border-color: var(--color-success); }
+    .case-num { font-family: var(--font-pixel); font-size: 0.6rem; color: var(--color-secondary); margin-bottom: 0.5rem; }
+    .case-card h3 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .case-card p { font-size: 0.9rem; color: var(--color-text-light); margin: 0; }
+
+    /* Case study view */
+    .case-view { display: none; }
+    .case-view.active { display: block; }
+
+    .case-header { margin-bottom: 1.5rem; }
+    .case-label { font-family: var(--font-pixel); font-size: 0.6rem; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .case-title { font-family: var(--font-pixel); font-size: 1.1rem; color: var(--color-primary-dark); margin-bottom: 0.5rem; }
+    .case-theme { font-family: var(--font-retro); font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+
+    /* Stage navigation */
+    .stage-dots { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--color-bg-dark); border-radius: 8px; }
+    .stage-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--color-border); border: 2px solid var(--color-text-light); cursor: pointer; transition: all 0.15s; }
+    .stage-dot:hover { transform: scale(1.2); }
+    .stage-dot.active { background: var(--color-primary); border-color: var(--color-primary-dark); transform: scale(1.3); }
+    .stage-dot.done { background: var(--color-success); border-color: var(--color-success); }
+
+    /* Stage label */
+    .stage-label { display: inline-block; font-family: var(--font-pixel); font-size: 0.55rem; padding: 0.3rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; color: white; }
+    .stage-label.scenario { background: var(--color-primary); }
+    .stage-label.response { background: var(--color-option-a); }
+    .stage-label.reflection { background: var(--color-secondary); }
+    .stage-label.discussion { background: var(--color-option-c); }
+    .stage-label.expert { background: var(--color-accent); color: var(--color-text); }
+    .stage-label.policy { background: #4a90a4; }
+    .stage-label.takeaways { background: var(--color-success); }
+
+    /* Scenario box */
+    .scenario-box { background: linear-gradient(135deg, #fefefe, #f8f6f0); border: 3px solid var(--color-primary); border-radius: 8px; padding: 1.75rem; margin-bottom: 1.5rem; position: relative; }
+    .scenario-box::before { content: 'THE SCENARIO'; position: absolute; top: -10px; left: 1.25rem; background: var(--color-primary); color: white; font-family: var(--font-pixel); font-size: 0.5rem; padding: 0.2rem 0.5rem; letter-spacing: 1px; }
+    .scenario-box p { font-style: italic; line-height: 1.8; margin-bottom: 1rem; }
+    .scenario-box p:last-child { margin-bottom: 0; }
+    .scenario-box ul { margin-top: 1rem; padding-left: 1.25rem; list-style: none; }
+    .scenario-box ul li { position: relative; padding-left: 1rem; margin-bottom: 0.5rem; font-style: italic; }
+    .scenario-box ul li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: bold; }
+
+    /* Options */
+    .options-title { font-family: var(--font-pixel); font-size: 0.6rem; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.25rem; }
+    .option { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem; margin-bottom: 0.75rem; background: var(--color-card); border: 3px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+    .option:hover { border-color: var(--color-primary); transform: translateX(4px); }
+    .option.selected { border-color: var(--color-primary); background: rgba(45,90,39,0.05); box-shadow: 3px 3px 0px rgba(0,0,0,0.1); }
+    .option-letter { flex-shrink: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-family: var(--font-pixel); font-size: 0.8rem; color: white; border-radius: 4px; }
+    .option-letter.a { background: var(--color-option-a); }
+    .option-letter.b { background: var(--color-option-b); }
+    .option-letter.c { background: var(--color-option-c); }
+    .option-letter.d { background: var(--color-option-d); }
+    .option-text { flex: 1; line-height: 1.5; }
+
+    /* Reflection */
+    .reflection-list { list-style: none; counter-reset: ref; }
+    .reflection-item { counter-increment: ref; position: relative; padding-left: 3rem; margin-bottom: 1.5rem; }
+    .reflection-item::before { content: counter(ref); position: absolute; left: 0; top: 0; width: 2rem; height: 2rem; background: var(--color-secondary); color: white; font-family: var(--font-pixel); font-size: 0.65rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+    .reflection-q { font-weight: 600; margin-bottom: 0.25rem; }
+    .reflection-sub { font-size: 0.9rem; color: var(--color-text-light); }
+
+    /* Discussion */
+    .discussion-group { margin-bottom: 1.25rem; }
+    .discussion-label { font-family: var(--font-retro); font-size: 1.1rem; color: var(--color-secondary); margin-bottom: 0.5rem; }
+    .discussion-group ul { padding-left: 1.25rem; }
+    .discussion-group li { margin-bottom: 0.5rem; }
+
+    /* Expert section */
+    .expert-box { background: linear-gradient(135deg, #f8f6ff, #f0eef8); border: 3px solid var(--color-secondary); border-radius: 8px; padding: 1.75rem; position: relative; }
+    .expert-box::before { content: 'EXPERT ANALYSIS'; position: absolute; top: -10px; left: 1.25rem; background: var(--color-secondary); color: white; font-family: var(--font-pixel); font-size: 0.5rem; padding: 0.2rem 0.5rem; letter-spacing: 1px; }
+    .option-analysis { margin-bottom: 1rem; padding: 1rem; background: rgba(255,255,255,0.5); border-left: 4px solid; border-radius: 0 4px 4px 0; }
+    .option-analysis.a { border-color: var(--color-option-a); }
+    .option-analysis.b { border-color: var(--color-option-b); }
+    .option-analysis.c { border-color: var(--color-option-c); }
+    .option-analysis.d { border-color: var(--color-option-d); }
+    .option-analysis strong { font-family: var(--font-retro); font-size: 1.1rem; display: block; margin-bottom: 0.25rem; }
+    .best-practice { background: rgba(61,139,64,0.1); border: 2px solid var(--color-success); border-radius: 8px; padding: 1.25rem; margin-top: 1.5rem; }
+    .best-practice-title { font-family: var(--font-retro); font-size: 1.2rem; color: var(--color-success); margin-bottom: 0.75rem; }
+    .best-practice ol { padding-left: 1.25rem; }
+    .best-practice li { margin-bottom: 0.4rem; }
+    .do-not { margin-top: 1.5rem; padding: 1rem; background: rgba(201,68,68,0.1); border-radius: 8px; }
+    .do-not strong { color: var(--color-error); }
+    .do-not ul { margin-top: 0.5rem; padding-left: 1.25rem; }
+
+    /* Policy */
+    .policy-list { display: grid; gap: 0.75rem; }
+    .policy-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: rgba(45,90,39,0.05); border-radius: 4px; }
+    .policy-icon { font-size: 1.25rem; }
+    .policy-name { font-weight: 600; color: var(--color-primary-dark); }
+    .policy-rel { font-size: 0.9rem; color: var(--color-text-light); }
+
+    /* Takeaways */
+    .takeaway { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1.25rem; background: var(--color-card); border: 2px solid var(--color-accent); border-radius: 8px; margin-bottom: 0.75rem; }
+    .takeaway-pin { font-size: 1.25rem; }
+    .takeaway strong { display: block; font-family: var(--font-retro); font-size: 1.1rem; color: var(--color-primary-dark); margin-bottom: 0.25rem; }
+
+    /* Navigation */
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--color-border); }
+    .nav-center { text-align: center; font-family: var(--font-retro); font-size: 1.1rem; color: var(--color-text-light); }
+    .nav-center span { display: block; font-size: 0.95rem; }
+
+    /* Complete banner */
+    .complete-banner { text-align: center; margin-top: 1rem; padding: 0.75rem; background: rgba(61,139,64,0.1); border-radius: 8px; color: var(--color-success); font-family: var(--font-retro); font-size: 1.1rem; }
+
+    /* Footer */
+    footer { background: var(--color-primary-dark); color: white; padding: 1.25rem 0; text-align: center; }
+    footer p { font-family: var(--font-retro); font-size: 1.1rem; opacity: 0.8; margin: 0; }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 0.75rem; }
+      .header-content { justify-content: center; text-align: center; }
+      .case-grid { grid-template-columns: 1fr; }
+      .option { flex-direction: column; }
+      .nav-bar { flex-direction: column; gap: 1rem; }
+    }
+
+    @media print {
+      .header, footer, .nav-bar, .stage-dots, .btn { display: none !important; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div>
+        <h1>Staff Online Safety Training</h1>
+        <div class="header-subtitle">Interactive Case Studies | Herne Hill School</div>
+      </div>
+      <div class="progress-box">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        <span class="progress-text"><span id="progressCount">0</span>/8 Complete</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- HOME SCREEN -->
+    <div id="homeScreen" class="home">
+      <div class="home-icon">📚</div>
+      <h1 class="home-title">Online Safety Case Studies</h1>
+      <p class="home-desc">Interactive professional development scenarios exploring the nuanced, real-world online safety challenges staff encounter daily.</p>
+
+      <div class="case-grid" id="caseGrid"></div>
+
+      <div class="card" style="text-align:left; margin-top:2rem;">
+        <h3 style="margin-bottom:0.75rem;">About This Training</h3>
+        <p>These case studies deliberately include incomplete information, competing priorities, and situations where reasonable people might disagree.</p>
+        <p><strong>The goal:</strong> Develop professional judgement, know when to escalate, and understand the principles that guide good decision-making.</p>
+        <p style="margin-bottom:0;"><strong>Aligned with:</strong> KCSIE 2024, school safeguarding policies, and the "Love, Care, Excellence" values of Herne Hill School.</p>
+      </div>
+    </div>
+
+    <!-- CASE STUDY VIEW -->
+    <div id="caseView" class="case-view">
+      <button class="btn btn-outline btn-small" onclick="goHome()">← Back to Cases</button>
+
+      <div class="case-header" style="margin-top:1.5rem;">
+        <div class="case-label">Case Study <span id="caseNum"></span></div>
+        <h2 class="case-title" id="caseTitle"></h2>
+        <div class="case-theme" id="caseTheme"></div>
+      </div>
+
+      <div class="stage-dots" id="stageDots"></div>
+
+      <div id="stageContent"></div>
+
+      <div class="nav-bar">
+        <button class="btn btn-outline" id="prevBtn" onclick="prevStage()">← Previous</button>
+        <div class="nav-center">
+          <span id="stageIcon">📖</span> <span id="stageName">Scenario</span>
+          <span>Stage <span id="stageNum">1</span> of 7</span>
+        </div>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextStage()">Next →</button>
+      </div>
+
+      <div class="complete-banner hidden" id="completeBanner">✓ Case Study Completed</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>Staff Online Safety Training | Herne Hill School | Love, Care, Excellence</p>
+  </div>
+</footer>
+
+<script>
+// Case study data
+const cases = [
+  {
+    id: 1,
+    title: "The Viral Video",
+    theme: "Responding to online content involving pupils",
+    scenario: `<p>It's Tuesday morning. You're on playground duty when Maya (Year 2) runs up to you, upset.</p>
+<p>"Miss, everyone's been watching a video of me! It's on TikTok and I'm crying in it and everyone's laughing!"</p>
+<p>You crouch down to her level. Through her tears, Maya explains that her older cousin (age 12) filmed her having a tantrum at a family birthday party over the weekend and posted it. Maya says "loads of people at school" have seen it. She begs you not to tell her mum because "Mummy will be so angry with Auntie Sarah."</p>
+<p>The bell is about to ring. Maya's class teacher is off sick today and there's a supply teacher covering. You have your own class waiting.</p>`,
+    options: [
+      { letter: "A", text: "Comfort Maya and tell her you'll sort it out, then speak to the supply teacher at break to hand over" },
+      { letter: "B", text: "Take Maya to the school office immediately, ask them to contact her parents, and brief the Designated Safeguarding Lead" },
+      { letter: "C", text: "Comfort Maya, promise to help, and at lunchtime try to find the video yourself to assess the situation" },
+      { letter: "D", text: "Reassure Maya that videos get forgotten quickly, encourage her to ignore anyone being unkind, and keep an eye on things" }
+    ],
+    reflection: [
+      { q: "What don't you know?", sub: "What additional information would change your approach?" },
+      { q: "Whose responsibility is this?", sub: "What's your role versus the DSL's, class teacher's, or parents' role?" },
+      { q: "What are Maya's needs right now?", sub: "Immediate emotional support? Action on the video? Protection from classmates?" },
+      { q: "What about her request for confidentiality?", sub: "She asked you not to tell her mum. How do you weigh a child's wishes against safeguarding duties?" },
+      { q: "What are the risks of acting too quickly? Too slowly?", sub: "" }
+    ],
+    discussion: {
+      pairs: [
+        "Would your response differ if Maya were in Reception versus Year 6?",
+        "What if Maya hadn't seemed upset - what if another child reported it?",
+        "How might implicit bias affect how we respond to family-posted content?"
+      ],
+      group: [
+        "Where does \"family matter\" end and \"safeguarding concern\" begin?",
+        "What's our school's actual procedure here - does everyone know it?"
+      ]
+    },
+    expert: {
+      intro: "The immediate priority is Maya's emotional wellbeing AND ensuring this reaches the right people quickly. The tension between these isn't as sharp as it might feel.",
+      options: [
+        { letter: "A", verdict: "Delays action too long", text: "A supply teacher shouldn't be expected to handle safeguarding matters, and break time could be 90+ minutes away. However, the instinct to ensure continuity of care is valid." },
+        { letter: "B", verdict: "Strongest response", text: "This might feel like \"escalating\" something that's \"just\" a family video, but: content of a child is online without parental consent, Maya is distressed at school, other pupils have seen it creating potential for ongoing unkindness, and parents need to be informed." },
+        { letter: "C", verdict: "Well-intentioned but problematic", text: "Staff should not be searching for content of pupils online. This also delays appropriate action and puts you in a difficult position if you do find something concerning." },
+        { letter: "D", verdict: "Underestimates the situation", text: "While resilience-building has its place, dismissing Maya's distress or hoping it \"blows over\" fails her. It also misses the safeguarding element." }
+      ],
+      keyPoint: "<strong>Regarding Maya's confidentiality request:</strong> Children cannot consent to keeping safeguarding-relevant information secret. Be honest: \"I can see you're worried about Mummy being upset, but my job is to keep you safe, and that means I need to tell some grown-ups who can help.\"",
+      bestPractice: [
+        "Comfort Maya briefly and validate her feelings (1-2 minutes)",
+        "Walk her to the office yourself (don't send her alone)",
+        "Brief office staff succinctly; request DSL and arrange cover for your class",
+        "Hand over to DSL with what you know",
+        "Check in with Maya later in the day"
+      ]
+    },
+    policy: [
+      { name: "Safeguarding Policy", rel: "Reporting procedures, role of DSL" },
+      { name: "Online Safety Policy", rel: "Incidents involving pupils and social media" },
+      { name: "KCSIE 2024", rel: "Understanding that safeguarding is everyone's responsibility" },
+      { name: "Behaviour Policy", rel: "Response to unkindness/bullying linked to online content" }
+    ],
+    takeaways: [
+      { title: "When in doubt, pass it up", text: "DSLs would rather hear about something minor than miss something significant" },
+      { title: "Children cannot swear you to secrecy", text: "Be kind but clear about your duty" },
+      { title: "Don't investigate online content yourself", text: "That's not your role and could compromise you" },
+      { title: "Urgency matters", text: "Same-day communication with DSL and parents; don't wait for \"a good moment\"" }
+    ]
+  },
+  {
+    id: 2,
+    title: "The Smartwatch Situation",
+    theme: "Managing devices and monitoring vs privacy",
+    scenario: `<p>You're the class teacher for Year 1. During phonics, you notice Oliver is distracted, repeatedly looking at his wrist. He's wearing a smartwatch - a children's GPS/calling watch that his parents got him for Christmas.</p>
+<p>You quietly ask Oliver to focus, but five minutes later he's pressing buttons on the watch. You ask him to take it off and put it in his tray until home time. Oliver gets upset: "But Mummy said I have to wear it always so she knows I'm safe!"</p>
+<p>At pickup, Oliver's mum approaches you, clearly annoyed. "Oliver said you took his watch away. We bought that specifically so we can check he's okay during the day. After everything in the news, I need to know he's safe. The watch stays on."</p>
+<p>You're aware that:</p>
+<ul>
+<li>The watch has a "listen-in" feature where parents can hear what's happening</li>
+<li>Several other children have started asking their parents for similar watches</li>
+<li>Your school doesn't have a specific policy on smartwatches</li>
+<li>The mum is a vocal member of the PTA</li>
+</ul>`,
+    options: [
+      { letter: "A", text: "Apologise for the confusion, agree Oliver can wear the watch, and raise the policy gap with SLT later" },
+      { letter: "B", text: "Explain calmly that the watch was distracting Oliver's learning, maintain that devices shouldn't be used in class, and suggest a meeting with the head to discuss" },
+      { letter: "C", text: "Express understanding of her safety concerns, but explain that a \"listen-in\" device in a classroom raises safeguarding issues for other children, and escalate to your DSL/head immediately" },
+      { letter: "D", text: "Compromise: Oliver can wear the watch but it must be on \"school mode\" (no functions) during class time, reviewing at half-term" }
+    ],
+    reflection: [
+      { q: "Where do parental rights end and school authority begin?", sub: "Parents have legitimate safety concerns, but does that extend to surveillance of the classroom?" },
+      { q: "Who else is affected?", sub: "It's not just Oliver - what about other children whose conversations might be listened to? Staff? Visitors?" },
+      { q: "What's the actual risk?", sub: "Is the listen-in feature genuinely being used, or is this a theoretical concern?" },
+      { q: "How do you maintain the relationship?", sub: "This parent is upset and influential. How do you stand firm without damaging the home-school partnership?" },
+      { q: "What precedent does this set?", sub: "If Oliver can wear a listening device, can everyone?" }
+    ],
+    discussion: {
+      pairs: [
+        "Have you encountered smartwatches in your class? How did you handle it?",
+        "Where do you draw the line between \"safety device\" and \"surveillance device\"?"
+      ],
+      group: [
+        "Should our school have a specific smartwatch policy? What should it say?",
+        "How do we balance parental anxiety (often media-driven) with practical classroom management?",
+        "What about staff privacy implications?"
+      ]
+    },
+    expert: {
+      intro: "This case sits at the intersection of parental anxiety, child safety, other children's privacy, staff privacy, and school authority. There's no perfect answer, but some approaches are more defensible than others.",
+      options: [
+        { letter: "A", verdict: "Prioritises relationship but abdicates responsibility", text: "It also potentially compromises other children's privacy without their parents' knowledge or consent." },
+        { letter: "B", verdict: "Reasonable but undersells the issue", text: "Framing this as primarily about \"distraction\" misses the bigger safeguarding and privacy dimension." },
+        { letter: "C", verdict: "Correctly identifies the safeguarding dimension", text: "A listen-in device raises genuine questions: other children's privacy, staff privacy, potential GDPR implications, and ironically, if a child were disclosing something sensitive, a live-listening parent could compromise proper handling." },
+        { letter: "D", verdict: "Might work short-term", text: "But doesn't address the fundamental policy gap and could be seen as inconsistent." }
+      ],
+      keyPoint: "<strong>The nuance:</strong> Not all smartwatches are equal. A watch that only allows parent-initiated calls at set times is different from one with live listen-in. Schools need to understand the specific functionality.",
+      bestPractice: [
+        "Stay calm and don't apologise for asking Oliver to focus",
+        "Acknowledge the parent's safety concerns genuinely",
+        "Explain you need to check school policy on devices with audio capability",
+        "Don't make promises or final decisions at pickup",
+        "Brief your DSL/head that day",
+        "School should clarify policy (ideally before this becomes a pattern)",
+        "Communicate outcome to parent through proper channels"
+      ]
+    },
+    policy: [
+      { name: "GDPR / Data Protection", rel: "Recording without consent" },
+      { name: "Safeguarding Policy", rel: "Devices that could compromise confidential disclosures" },
+      { name: "Behaviour Policy / Home-School Agreement", rel: "Expectations about devices" },
+      { name: "Staff Code of Conduct", rel: "Reasonable expectation of privacy" },
+      { name: "DfE Mobile Phones Guidance (2024)", rel: "Principles extend to smart devices" }
+    ],
+    takeaways: [
+      { title: "Listen-in capability crosses a line", text: "It's not just about distraction; it's about everyone's privacy" },
+      { title: "Don't make policy at the school gate", text: "\"I'll need to check and get back to you\" is always acceptable" },
+      { title: "Acknowledge emotion without capitulating", text: "Parents' anxiety is real; that doesn't mean their solution is appropriate" },
+      { title: "Schools need proactive smartwatch policies", text: "Waiting until it's a conflict is too late" }
+    ]
+  },
+  {
+    id: 3,
+    title: "The Staff WhatsApp",
+    theme: "Professional boundaries and digital communication",
+    scenario: `<p>You've been at Herne Hill School for two terms. The teaching staff have an unofficial WhatsApp group that's been running for years - "HHS Staff Room". It's mostly light-hearted: sharing memes, arranging social events, celebrating good news.</p>
+<p>Recently, you've noticed the tone shifting:</p>
+<ul>
+<li>Colleagues have started venting about specific parents ("Mrs T is emailing AGAIN")</li>
+<li>Yesterday someone shared a screenshot of what they called a "ridiculous" email from a parent, with the parent's name visible</li>
+<li>Last week there was a thread speculating about why a particular child is "always so difficult" - guessing about home circumstances</li>
+<li>The group includes a staff member who recently left and now works elsewhere</li>
+</ul>
+<p>You feel uncomfortable but nobody else seems concerned. The group admin is a popular, long-standing colleague. You're still relatively new and don't want to seem like a killjoy or untrustworthy.</p>`,
+    options: [
+      { letter: "A", text: "Leave the group quietly without saying anything - you don't want to be associated with it but also don't want confrontation" },
+      { letter: "B", text: "Stay in the group but don't engage with the problematic content - just use it for the social/practical stuff" },
+      { letter: "C", text: "Raise your concerns in the group chat, reminding colleagues about confidentiality and professional standards" },
+      { letter: "D", text: "Speak to the group admin privately first, expressing your concerns, and if nothing changes, raise it with a senior leader" }
+    ],
+    reflection: [
+      { q: "What's actually wrong here?", sub: "Be specific - which behaviours cross which lines?" },
+      { q: "Is there a difference between venting and breach?", sub: "Staff need to decompress. Where's the line?" },
+      { q: "What are the real risks?", sub: "Think about: the ex-staff member, screenshots, data protection, professional reputation, parental trust." },
+      { q: "Why haven't others said anything?", sub: "What dynamics might be at play?" },
+      { q: "What would happen if a parent saw this group?", sub: "Or Ofsted? Or a journalist?" }
+    ],
+    discussion: {
+      pairs: [
+        "Have you experienced similar situations? How did you handle it?",
+        "What's the difference between a supportive staff culture and an unprofessional one?"
+      ],
+      group: [
+        "Should schools have policies about unofficial staff communications?",
+        "How do we maintain team cohesion while upholding professional standards?",
+        "What's our collective responsibility here?"
+      ]
+    },
+    expert: {
+      intro: "Staff digital communication is one of the most common sources of professional conduct issues, often because informal channels feel \"safe\" in ways they aren't.<br><br><strong>What's actually going wrong:</strong><br>• Identifying parents by name in a non-work channel = potential data protection breach<br>• Sharing screenshots of parent communication = definite breach of confidentiality<br>• Speculating about children's home circumstances = unprofessional and potentially harmful<br>• Including ex-staff = information leaving the organisation entirely<br>• Written record = WhatsApp stores everything; it's discoverable in complaints, tribunals, FOI requests",
+      options: [
+        { letter: "A", verdict: "Protects you but doesn't address the problem", text: "It might also look suspicious if issues later emerge - \"You were in the group and said nothing?\"" },
+        { letter: "B", verdict: "Makes you complicit through presence", text: "Silence is tacit endorsement. You're also still receiving potentially sensitive information." },
+        { letter: "C", verdict: "Brave but likely to backfire", text: "Public challenge in informal spaces often triggers defensiveness. It may also create a written record of you identifying problems while staying in the group." },
+        { letter: "D", verdict: "Balances relationships with responsibility", text: "Approach the admin as a peer, not an accuser. Frame it as \"I'm worried we could all get in trouble\" rather than \"you're doing something wrong.\" Be specific about concerns. If no change, you have a duty to raise with leadership." }
+      ],
+      keyPoint: "<strong>Important framing:</strong> This isn't about being a killjoy. It's about protecting colleagues from themselves, protecting children and families from having their information mishandled, and protecting the school's reputation.",
+      bestPractice: [
+        "Approach the group admin privately as a peer",
+        "Frame it as protecting everyone, not accusing",
+        "Be specific about what concerns you",
+        "If no change within a reasonable time, escalate to leadership",
+        "Document your concerns and actions"
+      ]
+    },
+    policy: [
+      { name: "Staff Code of Conduct", rel: "Professional behaviour, confidentiality" },
+      { name: "Data Protection Policy", rel: "Sharing personal information outside secure systems" },
+      { name: "Social Media Policy", rel: "Should cover all digital communication, not just public platforms" },
+      { name: "Safeguarding Policy", rel: "Appropriate handling of information about children" },
+      { name: "Whistleblowing Policy", rel: "If concerns aren't addressed" }
+    ],
+    takeaways: [
+      { title: "Informal doesn't mean invisible", text: "WhatsApp is written, stored, and discoverable" },
+      { title: "The group is only as secure as its least discreet member", text: "Including ex-staff is a red flag" },
+      { title: "Venting becomes breach when you add names and details", text: "\"Hard day\" is fine; \"Mrs Thompson's son is exhausting\" is not" },
+      { title: "You are responsible for what you witness", text: "Staying silent makes you complicit; raising concerns is professional, not disloyal" }
+    ]
+  },
+  {
+    id: 4,
+    title: "The AI Homework",
+    theme: "Emerging technology and academic integrity",
+    scenario: `<p>You're marking Year 2 "All About Me" projects that children completed over half-term with family support. Most are what you'd expect - wobbly handwriting, drawings, photos from home.</p>
+<p>Then you reach Aiden's. It's... remarkable. The text is sophisticated, perfectly punctuated, and includes phrases like "My aspirations for the future include..." and "I derive great satisfaction from..." There are paragraphs about his hobbies that read like Wikipedia entries. The whole thing is beautifully laid out.</p>
+<p>Aiden is a bright child but has significant fine motor difficulties and usually produces minimal written work. This project is completely inconsistent with his normal output.</p>
+<p>You strongly suspect a parent has used ChatGPT or similar to write this. You're also aware that:</p>
+<ul>
+<li>Aiden's dad works in tech and has mentioned being "really into AI"</li>
+<li>The project brief said "with family support" but didn't specifically mention AI</li>
+<li>Aiden seems genuinely proud of his project</li>
+<li>Other staff have mentioned similar concerns about other children's homework</li>
+</ul>`,
+    options: [
+      { letter: "A", text: "Mark it as you would any other project - you can't prove AI was used, and family support was allowed" },
+      { letter: "B", text: "Give Aiden positive feedback but speak privately to his parents about your concerns, asking what support was provided" },
+      { letter: "C", text: "Treat this as a teaching moment - talk to Aiden about what parts he did himself and help him understand why that matters" },
+      { letter: "D", text: "Raise this as a whole-school issue with SLT - we need an AI policy before we can address individual cases" }
+    ],
+    reflection: [
+      { q: "What's actually the problem?", sub: "Is it AI specifically, or parental over-involvement more broadly?" },
+      { q: "What's fair to Aiden?", sub: "He may not understand what happened. He's 6." },
+      { q: "What about the home-school relationship?", sub: "The dad might think he was helping. How do you address this without accusations?" },
+      { q: "Is this cheating?", sub: "For a Year 2 half-term project? What are the stakes?" },
+      { q: "What message do we send?", sub: "To Aiden, to parents, to other children, about work and integrity?" }
+    ],
+    discussion: {
+      pairs: [
+        "Where does \"family support\" end and \"doing it for them\" begin?",
+        "Have you encountered AI-generated homework? How did you know?"
+      ],
+      group: [
+        "Do we need a school position on AI-assisted homework? What should it say?",
+        "How is this different from a parent typing up a child's dictated words?",
+        "What's age-appropriate understanding of \"your own work\"?"
+      ]
+    },
+    expert: {
+      intro: "AI in education is genuinely new territory, and schools are grappling with it. There's no established playbook. However, some principles are clear.<br><br><strong>First, let's separate the issues:</strong><br>• AI as a tool - Not inherently problematic; it's how it's used<br>• Parental over-involvement - A tale as old as school projects<br>• Mismatch with child's abilities - The red flag that prompted your concern<br>• Academic integrity for a 6-year-old - Very different stakes than a GCSE",
+      options: [
+        { letter: "A", verdict: "Avoids conflict but misses an opportunity", text: "If the project doesn't reflect Aiden's work, your feedback isn't reaching him. It also tacitly endorses the approach." },
+        { letter: "B", verdict: "Appropriate with careful framing", text: "You're not accusing them of cheating - you're opening a conversation about what \"support\" means. Try: \"Aiden's project is impressive! I'd love to understand how you approached it at home so I can build on that learning in class.\"" },
+        { letter: "C", verdict: "Has merit but needs age-appropriate handling", text: "A 6-year-old shouldn't be made to feel ashamed. You might say: \"Tell me about your project! Which bit was your favourite to do? What did you find tricky?\"" },
+        { letter: "D", verdict: "Essential but alongside, not instead of, this case", text: "Schools need to get ahead of AI, but you can still handle this situation appropriately now." }
+      ],
+      keyPoint: "<strong>The bigger picture:</strong> The point of a Year 2 project isn't the end product - it's the process, the learning, the parent-child interaction. AI-generated text short-circuits all of that. But framing this as \"cheating\" misunderstands what homework at this age is for.",
+      bestPractice: [
+        "Have a gentle conversation with Aiden first - celebrate his effort, understand his involvement",
+        "Contact parents warmly, seeking to understand their approach",
+        "Clarify expectations for future projects (school-wide consistency needed)",
+        "Raise the policy gap with SLT - this will keep happening",
+        "Consider: does your homework policy need updating?"
+      ]
+    },
+    policy: [
+      { name: "Homework Policy", rel: "Expectations for family involvement" },
+      { name: "Assessment Policy", rel: "Validity of teacher assessment" },
+      { name: "Teaching & Learning Policy", rel: "How we develop skills" },
+      { name: "Acceptable Use Policy", rel: "May need updating for AI" },
+      { name: "Home-School Agreement", rel: "Shared expectations" }
+    ],
+    takeaways: [
+      { title: "Focus on the child, not the technology", text: "Aiden's development matters more than catching AI use" },
+      { title: "Have the conversation before the accusation", text: "\"Help me understand\" opens doors" },
+      { title: "Schools need AI guidance now", text: "It's not going away, and clarity helps everyone" },
+      { title: "Process over product", text: "For young children, how they got there matters more than what they produced" }
+    ]
+  },
+  {
+    id: 5,
+    title: "The Screenshot Evidence",
+    theme: "Children reporting online incidents involving peers",
+    scenario: `<p>It's Friday afternoon. Freya (Year 2) asks to speak to you privately. She shows you her mum's phone - mum has given her permission to show you.</p>
+<p>On screen is a screenshot from a group chat on a gaming platform. The messages show three children from your class arranging to play together. One of them, Theo, writing: "Don't tell Freya shes so anoying". Another child, Isla, replying: "lol yeah freya is the worst". A third child, Marcus, sending a gif of someone crying.</p>
+<p>Freya is tearful. She says she saw this when her older sister was looking at the group (the sister is friends with Theo's older brother). Freya says: "They're supposed to be my friends."</p>
+<p>You're aware that:</p>
+<ul>
+<li>This happened outside school, on a home device</li>
+<li>You have no way to verify the screenshot is genuine or complete</li>
+<li>Theo, Isla, and Marcus are generally kind children</li>
+<li>Freya has a tendency to fall out with friends and can be socially challenging</li>
+<li>It's 3:25pm and parents arrive in 5 minutes</li>
+</ul>`,
+    options: [
+      { letter: "A", text: "Thank Freya for telling you, comfort her, and explain that since this happened outside school on a game, it's really a matter for parents to sort out" },
+      { letter: "B", text: "Take this seriously as potential bullying, log it formally, inform your DSL, and plan to speak to all four sets of parents" },
+      { letter: "C", text: "Comfort Freya, tell her you'll look into it, and on Monday have a quiet word with Theo, Isla, and Marcus about being kind - without mentioning the screenshot" },
+      { letter: "D", text: "Ask Freya's mum to come in briefly, explain what you've seen, and agree together whether this needs school involvement or is best handled at home" }
+    ],
+    reflection: [
+      { q: "Is this a school matter?", sub: "It happened at home, on a non-school platform. But does that mean it's not your business?" },
+      { q: "What's the impact on school?", sub: "How might this affect friendships, classroom dynamics, Freya's wellbeing at school?" },
+      { q: "What about the accused children?", sub: "They're 6/7. They might not understand the impact. How do you balance supporting Freya with being fair to them?" },
+      { q: "What about the \"evidence\"?", sub: "Screenshots can be edited, lack context, or be part of a longer exchange. How much weight do you give it?" },
+      { q: "What's the timing pressure?", sub: "End of day Friday - does that change your approach?" }
+    ],
+    discussion: {
+      pairs: [
+        "How do you handle the \"it happened at home\" argument from parents?",
+        "What would you do differently if the content was more severe (e.g., threats)?"
+      ],
+      group: [
+        "What's our school's position on out-of-school online behaviour?",
+        "How do we investigate when we can't see the original context?",
+        "How do we protect reporting children from retaliation?"
+      ]
+    },
+    expert: {
+      intro: "The \"it happened outside school\" argument is increasingly untenable. If behaviour outside school affects wellbeing and relationships in school, it becomes a school matter. DfE guidance is clear on this.",
+      options: [
+        { letter: "A", verdict: "Might feel pragmatic but fails Freya", text: "It misses the opportunity to address the behaviour and sends a message that online unkindness is acceptable if it happens at home." },
+        { letter: "B", verdict: "Procedurally correct but may be heavy-handed", text: "This is unkind words, not threats or sustained harassment. Proportionality matters." },
+        { letter: "C", verdict: "Tries to address behaviour but lacks transparency", text: "Acting on something you can't reference is unfair to the other children and their parents." },
+        { letter: "D", verdict: "A good starting point", text: "It keeps the parent informed and involved, acknowledges the complexity of jurisdiction, allows for collaborative decision-making, and buys you time to think and consult." }
+      ],
+      keyPoint: "<strong>The complicating factors:</strong> Freya's social history is relevant but shouldn't discount her experience. The screenshot's provenance (via older siblings) is convoluted. The children's age matters hugely - at 6-7, they're still learning about digital communication and empathy.",
+      bestPractice: [
+        "Comfort Freya and validate her feelings",
+        "Speak briefly with her mum - share what you've seen, agree to discuss further Monday",
+        "Log the concern (even if action TBD)",
+        "Monday: Consult DSL about proportionate response",
+        "Consider: Whole-class work on online kindness (without naming anyone) plus individual conversations",
+        "Frame it as education, not punishment"
+      ]
+    },
+    policy: [
+      { name: "Behaviour Policy", rel: "Should explicitly include online behaviour affecting school relationships" },
+      { name: "Anti-Bullying Policy", rel: "Definition of bullying, reporting procedures" },
+      { name: "Safeguarding Policy", rel: "Recording concerns, DSL involvement" },
+      { name: "Online Safety Policy", rel: "Out-of-school incidents" },
+      { name: "KCSIE 2024", rel: "Schools can address out-of-school behaviour" }
+    ],
+    takeaways: [
+      { title: "Online and offline are connected", text: "If it affects school, it's school business" },
+      { title: "Proportionality matters", text: "Unkind words need addressing, but not the same response as threats" },
+      { title: "Educate rather than punish", text: "Young children are still learning digital citizenship" },
+      { title: "Include parents as partners", text: "Especially when the line between home and school is blurred" }
+    ]
+  },
+  {
+    id: 6,
+    title: "The Safeguarding Disclosure",
+    theme: "When online safety intersects with safeguarding",
+    scenario: `<p>You're helping children log off at the end of a computing lesson. As you pass Ellie (Year 2), she quickly minimises a browser window. You catch a glimpse of something that might have been a video call interface.</p>
+<p>When you gently ask what she was looking at, Ellie goes very quiet. Then she says, in a small voice: "I was talking to my daddy. Mummy doesn't know. Daddy says it has to be a secret."</p>
+<p>You're aware that:</p>
+<ul>
+<li>Ellie's parents separated last year</li>
+<li>Dad is listed as having no contact with school - mum is the sole contact</li>
+<li>You don't know the circumstances of the separation or any legal arrangements</li>
+<li>Ellie seems anxious, not happy, about this interaction</li>
+<li>Three other children are waiting for help logging off</li>
+</ul>`,
+    options: [
+      { letter: "A", text: "Thank Ellie for telling you, reassure her she's not in trouble, and immediately speak to your DSL - this could be a safeguarding concern" },
+      { letter: "B", text: "Ask Ellie a few more questions to understand the situation better before deciding whether it's serious enough to escalate" },
+      { letter: "C", text: "Make a note of what she said, ensure she's okay, and monitor the situation - it could be an innocent custody arrangement" },
+      { letter: "D", text: "Speak to Ellie's mum at pickup to let her know what happened and ask about the situation" }
+    ],
+    reflection: [
+      { q: "What are the red flags here?", sub: "List the specific elements that concern you." },
+      { q: "What is your role?", sub: "What should you do, and what should you not do?" },
+      { q: "What don't you know?", sub: "What context might change the picture?" },
+      { q: "What about Ellie's wellbeing in this moment?", sub: "How do you support her without interrogating her?" },
+      { q: "Why might school not have contact details for dad?", sub: "What are the possibilities?" }
+    ],
+    discussion: {
+      pairs: [
+        "What's the difference between \"finding out more\" and \"investigating\"?",
+        "How do you manage the tension between supporting a child and not asking leading questions?"
+      ],
+      group: [
+        "Walk through: what exactly would you say to the DSL?",
+        "What would you do if this happened at 3:25pm on a Friday with no DSL on site?"
+      ]
+    },
+    expert: {
+      intro: "This scenario brings together online safety and core safeguarding. The online element (covert video call during school, secrecy) is significant, but the underlying concern may be about contact arrangements, coercive control, or child safety.<br><br><strong>The red flags are:</strong><br>• Father has no contact listed with school (why?)<br>• Child describes secrecy (\"Mummy doesn't know\")<br>• Father has told child to keep secret<br>• Child's demeanour is anxious, not happy<br>• Contact happened covertly during school time",
+      options: [
+        { letter: "A", verdict: "Correct response", text: "This ticks multiple boxes for safeguarding referral: secrecy enforced by an adult, possible breach of contact arrangements, possible coercive control dynamic, child's emotional state." },
+        { letter: "B", verdict: "Well-intentioned but wrong", text: "Investigating is not your job. Asking leading questions can contaminate evidence if this becomes a formal matter. Keep questions open: \"Are you okay?\" is fine; \"Does Daddy call you often?\" is not." },
+        { letter: "C", verdict: "Dangerously delays appropriate action", text: "You have enough information to refer now. \"Monitoring\" is not appropriate when there are specific, immediate concerns." },
+        { letter: "D", verdict: "Could be appropriate eventually, but DSL first", text: "You don't know if there are court orders involved, if mum is aware, or if telling mum could escalate a domestic situation. DSL needs to make that call." }
+      ],
+      keyPoint: "<strong>Key principle:</strong> Secrecy enforced by adults is always a red flag. This is a core safeguarding principle.",
+      bestPractice: [
+        "Thank Ellie calmly: \"Thank you for telling me. You're not in any trouble.\"",
+        "Don't ask more questions",
+        "Ensure Ellie is safely with her class/teacher",
+        "Go directly to DSL (or in their absence, head/deputy)",
+        "Record what Ellie said, in her words, as soon as possible",
+        "Follow DSL's guidance from there"
+      ],
+      doNot: [
+        "Promise confidentiality to Ellie (\"I might need to tell someone to keep you safe\")",
+        "Try to find out more",
+        "Contact either parent yourself",
+        "Discuss with other staff (except DSL)",
+        "Wait until a \"better time\""
+      ]
+    },
+    policy: [
+      { name: "Safeguarding/Child Protection Policy", rel: "Immediate referral procedures, recording" },
+      { name: "KCSIE 2024", rel: "All staff responsibility, professional curiosity, not investigating" },
+      { name: "Online Safety Policy", rel: "Covert online contact, monitoring during school" },
+      { name: "Acceptable Use Policy", rel: "Pupil use of video calling" }
+    ],
+    takeaways: [
+      { title: "Secrecy enforced by adults is always a red flag", text: "This is a core safeguarding principle" },
+      { title: "Your job is to notice and report, not investigate", text: "Keep questions minimal and open" },
+      { title: "DSL first, always", text: "Even if it feels like you need more information" },
+      { title: "The online element is secondary", text: "This is fundamentally a safeguarding concern; the video call is just the mechanism" }
+    ]
+  },
+  {
+    id: 7,
+    title: "The Digital Distraction",
+    theme: "Professional boundaries with your own device use",
+    scenario: `<p>It's been a long half-term. You're exhausted. During wet play, while supervising your class in the classroom, you sit at your desk and check your personal phone - just quickly scrolling Instagram while children play independently.</p>
+<p>A child approaches with a question. You put your phone face-down and help them, then return to scrolling. A few minutes later, you notice one of the Year 2s is watching you. "Miss, you're on your phone. We're not allowed phones."</p>
+<p>Later that day, a parent emails the head: "My daughter mentioned her teacher was on their phone during class today. I'm concerned about supervision."</p>
+<p>You're now in a meeting with your headteacher about this. The head asks: "What happened, and what are your thoughts?"</p>`,
+    options: [
+      { letter: "A", text: "Apologise, explain you were tired but acknowledge it was wrong, and commit to not doing it again" },
+      { letter: "B", text: "Contextualise it - wet play, independent time, just a few minutes - while acknowledging the optics aren't great" },
+      { letter: "C", text: "Point out that you were still supervising, nothing happened, and the parent is overreacting" },
+      { letter: "D", text: "Acknowledge the concern but note that the school doesn't have a clear policy on staff phone use during non-teaching time" }
+    ],
+    reflection: [
+      { q: "What did you actually do wrong?", sub: "Be specific. Was it the phone use, the timing, the visibility, something else?" },
+      { q: "What are the risks you created?", sub: "Even if nothing happened this time." },
+      { q: "What's fair criticism vs overreaction?", sub: "Where's the line?" },
+      { q: "What would you think if you saw a colleague doing this?", sub: "" },
+      { q: "What do children learn from watching us?", sub: "" }
+    ],
+    discussion: {
+      pairs: [
+        "Be honest: have you ever checked your phone when you probably shouldn't have?",
+        "Where do you draw the line between \"quick glance\" and \"distracted\"?"
+      ],
+      group: [
+        "What should a staff phone policy say?",
+        "Is wet play supervision different from teaching time?",
+        "How do we balance being human (tired, needing breaks) with professional standards?"
+      ]
+    },
+    expert: {
+      intro: "This scenario is uncomfortable because most of us recognise ourselves in it. But that recognition shouldn't diminish our professional analysis.<br><br><strong>What actually went wrong:</strong><br>• Reduced supervision - your attention was on your phone, not the children<br>• Modelling - children see staff as role models; \"do as I say, not as I do\" doesn't work<br>• Visibility - a child noticed and told their parent; perception matters<br>• Safeguarding - during that time, you might have missed something<br>• Professional standards - this reflects on you and the school",
+      options: [
+        { letter: "A", verdict: "The mature response", text: "No excuses, no context that sounds like justification. Ownership." },
+        { letter: "B", verdict: "Tempting but lands poorly", text: "It sounds like \"yes, but...\" which isn't really accepting responsibility." },
+        { letter: "C", verdict: "Professionally damaging", text: "Even if the parent is overreacting, your response to your head shouldn't be defensive." },
+        { letter: "D", verdict: "Has a kernel of truth but is deflection", text: "Policy clarity is a separate conversation for another time." }
+      ],
+      keyPoint: "<strong>The best response:</strong> \"You're right to raise this. I was tired, but that's not an excuse. I checked my phone during wet play when I should have been fully focused on the children. The child saw me and rightly called it out - we tell them not to use devices, and I wasn't modelling that. Nothing happened, but something could have. I'm sorry. It won't happen again.\"",
+      bestPractice: [
+        "Accept responsibility without excuses",
+        "Acknowledge the child was right to notice the inconsistency",
+        "Commit to change",
+        "Then, separately: \"I do think clearer guidance for staff on phone use would help everyone. Could we discuss that as a team?\""
+      ]
+    },
+    policy: [
+      { name: "Staff Code of Conduct", rel: "Professional behaviour, safeguarding duties" },
+      { name: "Safeguarding Policy", rel: "Active supervision requirements" },
+      { name: "Mobile Phone Policy (staff)", rel: "May need clarification" },
+      { name: "Wellbeing Policy", rel: "If fatigue is affecting professional practice" }
+    ],
+    takeaways: [
+      { title: "We're always modelling", text: "Children watch what we do, not just what we say" },
+      { title: "Supervision means attention", text: "Physically present isn't the same as supervising" },
+      { title: "Own your mistakes", text: "Defensiveness makes small issues bigger" },
+      { title: "If you're too tired to function, that's its own problem", text: "Address the root cause" }
+    ]
+  },
+  {
+    id: 8,
+    title: "The Worried Parent",
+    theme: "Supporting parents with online safety concerns",
+    scenario: `<p>A parent approaches you at the classroom door, looking distressed. She says:</p>
+<p>"Can I just grab you for a minute? I'm really worried about Jake. He's completely obsessed with YouTube - it's all he wants to do. He's started watching these really weird videos, like someone unwrapping toys for hours, or strange cartoons that give him nightmares. I've tried to limit it but he has meltdowns. My husband thinks I'm overreacting. I don't know what to do. You see so many children - is this normal? What should I do?"</p>
+<p>Jake is a Reception child in your class. You have noticed he sometimes seems tired and he talks a lot about YouTube characters you don't recognise. There's a queue of parents forming behind this mum. You have a staff meeting in 10 minutes.</p>`,
+    options: [
+      { letter: "A", text: "Express sympathy, reassure her that screen time battles are common, and suggest she speaks to the GP or health visitor if she's really worried" },
+      { letter: "B", text: "Take her concerns seriously, share what you've noticed about Jake, and offer to arrange a proper meeting to discuss together" },
+      { letter: "C", text: "Give her some quick practical tips - time limits, parental controls, YouTube Kids - and recommend some websites for more support" },
+      { letter: "D", text: "Listen supportively but explain that home screen time isn't really a school matter, and suggest she speaks to other parents for peer advice" }
+    ],
+    reflection: [
+      { q: "What is she actually asking for?", sub: "Information? Validation? Practical help? Permission?" },
+      { q: "Is this a school matter?", sub: "If not, does that mean it's not your concern?" },
+      { q: "What do you know that might help?", sub: "And what's beyond your expertise?" },
+      { q: "How do you support her without overstepping?", sub: "Or taking on responsibility you can't fulfil?" },
+      { q: "What about the practical constraints?", sub: "Queue of parents, staff meeting - how do you honour those while still being helpful?" }
+    ],
+    discussion: {
+      pairs: [
+        "How would you respond in the moment, in 2 minutes or less?",
+        "What do you actually know about parental controls, YouTube Kids, etc.?"
+      ],
+      group: [
+        "What resources should we be able to signpost parents to?",
+        "Is this the kind of thing we should cover at a parent workshop?",
+        "Where's the line between supporting families and telling them how to parent?"
+      ]
+    },
+    expert: {
+      intro: "This is about pastoral care and home-school partnership, not just online safety. The parent is reaching out because she trusts you and doesn't know where else to turn.",
+      options: [
+        { letter: "A", verdict: "Might be appropriate eventually, but feels dismissive as an opener", text: "Unless there are developmental concerns, this isn't medical." },
+        { letter: "B", verdict: "The right approach", text: "It validates her concerns, creates space for a proper conversation, and acknowledges your role as partner in Jake's wellbeing." },
+        { letter: "C", verdict: "Tempting because it feels helpful", text: "But you're giving advice in a rushed context, might not have full information, and tips without understanding the situation often don't work." },
+        { letter: "D", verdict: "Technically defensible but misses the point", text: "Parents reaching out about wellbeing at home is a good thing. We want them to feel they can approach school." }
+      ],
+      keyPoint: "<strong>In the moment (2 minutes):</strong> \"I can hear how worried you are, and thank you for trusting me with this. I have noticed Jake does talk about YouTube a lot, and there have been some tired days. This deserves more than a doorstep conversation - can I email you later today to arrange a time to sit down properly? There might also be some resources I can dig out for you. You're not overreacting - lots of families are navigating this.\"",
+      bestPractice: [
+        "Listen more than advise",
+        "Share school-based observations (tired, attention, talk about content)",
+        "Explore what she's already tried",
+        "Provide genuinely helpful resources (Internet Matters, NSPCC, National Online Safety)",
+        "Consider: is there anything school can do? (Social stories, PSHE content)",
+        "Signpost further support if needed"
+      ]
+    },
+    policy: [
+      { name: "Home-School Partnership / Parent Engagement Policy", rel: "How we support families" },
+      { name: "PSHE Curriculum", rel: "Online safety content" },
+      { name: "Wellbeing / Pastoral Care", rel: "Supporting families" },
+      { name: "Online Safety Policy", rel: "Parent communication and education" }
+    ],
+    takeaways: [
+      { title: "Parents approaching you is a success", text: "It means they trust school as a partner" },
+      { title: "Don't give advice in doorway conversations", text: "Create space for proper dialogue" },
+      { title: "Validate before solving", text: "\"You're not overreacting\" is powerful" },
+      { title: "Know your signposting resources", text: "Internet Matters, NSPCC, National Online Safety, school parent workshops" }
+    ]
+  }
+];
+
+// Stage definitions
+const stages = [
+  { id: 'scenario', name: 'Scenario', icon: '📖', label: 'scenario' },
+  { id: 'response', name: 'Response', icon: '🤔', label: 'response' },
+  { id: 'reflection', name: 'Reflection', icon: '💭', label: 'reflection' },
+  { id: 'discussion', name: 'Discussion', icon: '👥', label: 'discussion' },
+  { id: 'expert', name: 'Expert Analysis', icon: '🎓', label: 'expert' },
+  { id: 'policy', name: 'Policy', icon: '📋', label: 'policy' },
+  { id: 'takeaways', name: 'Takeaways', icon: '📌', label: 'takeaways' }
+];
+
+// State
+let currentCase = null;
+let currentStage = 0;
+let completed = JSON.parse(localStorage.getItem('staffTrainingCompleted') || '[]');
+let responses = JSON.parse(localStorage.getItem('staffTrainingResponses') || '{}');
+
+// Initialize
+function init() {
+  renderCaseGrid();
+  updateProgress();
+}
+
+// Render case grid on home screen
+function renderCaseGrid() {
+  const grid = document.getElementById('caseGrid');
+  grid.innerHTML = cases.map(c => `
+    <div class="case-card ${completed.includes(c.id) ? 'completed' : ''}" onclick="openCase(${c.id})">
+      <div class="case-num">Case Study ${c.id} ${completed.includes(c.id) ? '✓' : ''}</div>
+      <h3>${c.title}</h3>
+      <p>${c.theme}</p>
+    </div>
+  `).join('');
+}
+
+// Update progress display
+function updateProgress() {
+  const pct = (completed.length / cases.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = completed.length;
+}
+
+// Open a case study
+function openCase(id) {
+  currentCase = cases.find(c => c.id === id);
+  currentStage = 0;
+  document.getElementById('homeScreen').classList.add('hidden');
+  document.getElementById('caseView').classList.remove('hidden');
+  document.getElementById('caseView').classList.add('active');
+  document.getElementById('caseNum').textContent = currentCase.id;
+  document.getElementById('caseTitle').textContent = '"' + currentCase.title + '"';
+  document.getElementById('caseTheme').textContent = currentCase.theme;
+  renderStageDots();
+  renderStage();
+  window.scrollTo(0, 0);
+}
+
+// Go back to home
+function goHome() {
+  document.getElementById('homeScreen').classList.remove('hidden');
+  document.getElementById('caseView').classList.add('hidden');
+  document.getElementById('caseView').classList.remove('active');
+  currentCase = null;
+  renderCaseGrid();
+}
+
+// Render stage navigation dots
+function renderStageDots() {
+  const dots = document.getElementById('stageDots');
+  dots.innerHTML = stages.map((s, i) => `
+    <div class="stage-dot ${i === currentStage ? 'active' : ''} ${i < currentStage ? 'done' : ''}"
+         onclick="goToStage(${i})" title="${s.name}"></div>
+  `).join('');
+}
+
+// Go to specific stage
+function goToStage(i) {
+  currentStage = i;
+  renderStageDots();
+  renderStage();
+  window.scrollTo(0, 0);
+}
+
+// Navigate stages
+function prevStage() {
+  if (currentStage > 0) {
+    currentStage--;
+    renderStageDots();
+    renderStage();
+    window.scrollTo(0, 0);
+  }
+}
+
+function nextStage() {
+  if (currentStage < stages.length - 1) {
+    currentStage++;
+    renderStageDots();
+    renderStage();
+    window.scrollTo(0, 0);
+  } else {
+    markComplete();
+  }
+}
+
+// Mark case complete
+function markComplete() {
+  if (!completed.includes(currentCase.id)) {
+    completed.push(currentCase.id);
+    localStorage.setItem('staffTrainingCompleted', JSON.stringify(completed));
+    updateProgress();
+  }
+  document.getElementById('completeBanner').classList.remove('hidden');
+  updateNavButtons();
+}
+
+// Select response option
+function selectOption(letter) {
+  responses[currentCase.id] = letter;
+  localStorage.setItem('staffTrainingResponses', JSON.stringify(responses));
+  renderStage();
+}
+
+// Update navigation buttons
+function updateNavButtons() {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  prevBtn.disabled = currentStage === 0;
+  prevBtn.style.opacity = currentStage === 0 ? '0.5' : '1';
+
+  if (currentStage === stages.length - 1) {
+    if (completed.includes(currentCase.id)) {
+      nextBtn.textContent = 'Complete ✓';
+      nextBtn.classList.remove('btn-primary');
+      nextBtn.classList.add('btn-accent');
+    } else {
+      nextBtn.textContent = 'Mark Complete';
+      nextBtn.classList.remove('btn-primary');
+      nextBtn.classList.add('btn-accent');
+    }
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.classList.add('btn-primary');
+    nextBtn.classList.remove('btn-accent');
+  }
+
+  // Disable next on response stage if no selection
+  if (currentStage === 1 && !responses[currentCase.id]) {
+    nextBtn.disabled = true;
+    nextBtn.style.opacity = '0.5';
+  } else {
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = '1';
+  }
+
+  document.getElementById('stageIcon').textContent = stages[currentStage].icon;
+  document.getElementById('stageName').textContent = stages[currentStage].name;
+  document.getElementById('stageNum').textContent = currentStage + 1;
+
+  // Show/hide complete banner
+  if (completed.includes(currentCase.id)) {
+    document.getElementById('completeBanner').classList.remove('hidden');
+  } else {
+    document.getElementById('completeBanner').classList.add('hidden');
+  }
+}
+
+// Render current stage content
+function renderStage() {
+  const content = document.getElementById('stageContent');
+  const stage = stages[currentStage];
+  const c = currentCase;
+  let html = `<span class="stage-label ${stage.label}">Stage ${currentStage + 1}: ${stage.name}</span>`;
+
+  switch(stage.id) {
+    case 'scenario':
+      html += `<div class="scenario-box">${c.scenario}</div>
+        <p style="font-style:italic; color:var(--color-text-light);">Take a moment to consider what you would do in this situation before proceeding.</p>`;
+      break;
+
+    case 'response':
+      html += `<p style="margin-bottom:1.25rem;">Select your instinctive response. There's no judgement here - this captures your gut reaction.</p>
+        <h4 class="options-title">Response Options</h4>`;
+      c.options.forEach(opt => {
+        const sel = responses[c.id] === opt.letter ? 'selected' : '';
+        html += `<div class="option ${sel}" onclick="selectOption('${opt.letter}')">
+          <div class="option-letter ${opt.letter.toLowerCase()}">${opt.letter}</div>
+          <div class="option-text">${opt.text}</div>
+        </div>`;
+      });
+      break;
+
+    case 'reflection':
+      html += `<p style="margin-bottom:1.25rem;">Before revealing expert thinking, consider these questions:</p>
+        <ol class="reflection-list">`;
+      c.reflection.forEach(r => {
+        html += `<li class="reflection-item">
+          <div class="reflection-q">${r.q}</div>
+          ${r.sub ? `<div class="reflection-sub">${r.sub}</div>` : ''}
+        </li>`;
+      });
+      html += '</ol>';
+      break;
+
+    case 'discussion':
+      html += `<p style="margin-bottom:1.25rem;">For group training sessions, use these prompts to facilitate discussion:</p>`;
+      if (c.discussion.pairs) {
+        html += `<div class="discussion-group">
+          <div class="discussion-label">In pairs, discuss:</div>
+          <ul>${c.discussion.pairs.map(p => `<li>${p}</li>`).join('')}</ul>
+        </div>`;
+      }
+      if (c.discussion.group) {
+        html += `<div class="discussion-group">
+          <div class="discussion-label">As a group:</div>
+          <ul>${c.discussion.group.map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>`;
+      }
+      break;
+
+    case 'expert':
+      html += `<div class="expert-box">
+        <p style="margin-bottom:1.25rem;">${c.expert.intro}</p>`;
+      c.expert.options.forEach(opt => {
+        html += `<div class="option-analysis ${opt.letter.toLowerCase()}">
+          <strong>Option ${opt.letter}: ${opt.verdict}</strong>
+          <p style="margin:0;">${opt.text}</p>
+        </div>`;
+      });
+      if (c.expert.keyPoint) {
+        html += `<p style="margin-top:1.25rem;">${c.expert.keyPoint}</p>`;
+      }
+      if (c.expert.bestPractice) {
+        html += `<div class="best-practice">
+          <div class="best-practice-title">✅ Best Practice Response</div>
+          <ol>${c.expert.bestPractice.map(bp => `<li>${bp}</li>`).join('')}</ol>
+        </div>`;
+      }
+      if (c.expert.doNot) {
+        html += `<div class="do-not">
+          <strong>Do NOT:</strong>
+          <ul>${c.expert.doNot.map(d => `<li>${d}</li>`).join('')}</ul>
+        </div>`;
+      }
+      html += '</div>';
+      break;
+
+    case 'policy':
+      html += `<p style="margin-bottom:1.25rem;">This case study connects to the following school policies and statutory guidance:</p>
+        <div class="policy-list">`;
+      c.policy.forEach(p => {
+        html += `<div class="policy-item">
+          <div class="policy-icon">📄</div>
+          <div>
+            <div class="policy-name">${p.name}</div>
+            <div class="policy-rel">${p.rel}</div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+      break;
+
+    case 'takeaways':
+      html += `<p style="margin-bottom:1.25rem;">Remember these principles:</p>`;
+      c.takeaways.forEach(t => {
+        html += `<div class="takeaway">
+          <div class="takeaway-pin">📌</div>
+          <div>
+            <strong>${t.title}</strong>
+            <span>${t.text}</span>
+          </div>
+        </div>`;
+      });
+      break;
+  }
+
+  content.innerHTML = html;
+  updateNavButtons();
+}
+
+// Start
+init();
+</script>
+</body>
 </html>
